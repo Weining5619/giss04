@@ -14,7 +14,10 @@ knitr::opts_chunk$set(echo = TRUE)
 a <- 1
 b <- 2
 x <- a + b
+y <- a - b
 x
+y
+x + y
 ```
 
 

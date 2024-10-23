@@ -8,13 +8,10 @@ date: "2024-10-22"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
 ```{r}
 library(terra)
 library(here)
-jan<-terra::rast(here("prac3_data", "wc2.1_5m_tavg_01.tif"))
+jan<-terra::rast("/Users/weiningl/CASA/05GISS/wk03/prac3/data03/wc2.1_5m_tavg/wc2.1_5m_tavg_01.tif")
 # have a look at the raster layer jan
 plot(jan)
 ```
-

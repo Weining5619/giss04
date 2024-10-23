@@ -8,3 +8,103 @@ date: "2024-10-23"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+packages
+
+```{r}
+install.packages("countrycode") 
+```
+
+```{r}
+library(countrycode)
+library(sf)
+library(here)
+library(dplyr)
+library(ggplot2)
+library(tmap)
+library(tmaptools)
+```
+
+load data
+
+```{r}
+shape <- st_read(
+  "/Users/weiningl/CASA/05GISS/wk04/prac-data4/World_Countries_(Generalized)_9029012925078512962.geojson")
+
+summary(shape)
+
+plot(shape)
+st_crs(shape)
+```
+
+```{r}
+raw_data<- read.csv(here::here("/Users/weiningl/CASA/05GISS/wk04/prac-data4/HDR23-24_Composite_indices_complete_time_series.csv"),
+                    header = TRUE, sep = ",", 
+                    encoding = "latin1",
+                    na = "n/a")
+summary(raw_data)
+```
+
+select column
+
+```{r}
+GIIdata <- raw_data %>%
+  select(1:4, "gii_2010", "gii_2019")
+head(GIIdata)
+```
+
+*GIIdata* is iso3, *shape* is iso2 use `countrycode` package to Unify
+
+```{r}
+GIIdata$iso3c <- countrycode(sourcevar = GIIdata$country,
+                             origin = "country.name",
+                             destination = "iso3c")
+```
+
+```{r}
+shape$iso3c <- countrycode(sourcevar = shape$COUNTRYAFF,
+                             origin = "country.name",
+                             destination = "iso3c")
+```
+
+Join the global gender inequality index to spatial data of the World
+
+```{r}
+merged_data <- shape %>%
+  left_join(., 
+            GIIdata, by = "iso3c")
+merged_data%>%
+  head(., n=10)
+```
+
+creating a new column of difference in inequality between 2010 and 2019
+
+```{r}
+merged_data$difference <- merged_data$gii_2019 - merged_data$gii_2010
+```
+
+plot
+
+```{r}
+tmap_mode("plot")
+qtm(merged_data, 
+    fill = "difference")
+```
+
+Advanced
+
+```{r}
+tmap_mode("view")
+
+tm_shape(merged_data) + 
+  tm_polygons("difference", 
+              style="pretty",
+              palette="Blues",
+              midpoint=NA,
+              title="difference in GII",
+              alpha = 0.5) + 
+  tm_basemap(server = "CartoDB.Positron") +
+  ## if you like, you can switch server = "OpenStreetMap" with server = "CartoDB.Positron"
+  tm_compass(position = c("left", "bottom"),type = "arrow") + 
+  tm_scale_bar(position = c("left", "bottom")) +
+  tm_layout(title = "difference in gender inequality index between 2010 and 2019")
+```

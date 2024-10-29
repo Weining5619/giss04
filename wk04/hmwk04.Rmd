@@ -10,6 +10,7 @@ library(countrycode)
 library(sf)
 library(here)
 library(dplyr)
+library(janitor)
 library(ggplot2)
 library(tmap)
 library(tmaptools)
@@ -41,6 +42,13 @@ select column
 GIIdata <- raw_data %>%
   select(1:4, "gii_2010", "gii_2019")
 head(GIIdata)
+```
+
+```{r}
+
+
+GIIdata <- GIIdata %>%
+  clean_names()
 ```
 
 *GIIdata* is iso3, *shape* is iso2 use `countrycode` package to Unify

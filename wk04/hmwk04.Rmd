@@ -1,12 +1,3 @@
----
-title: "hmwk04"
-output: html_document
-date: "2024-10-23"
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 packages
 
@@ -28,7 +19,7 @@ load data
 
 ```{r}
 shape <- st_read(
-  "/Users/weiningl/CASA/05GISS/wk04/prac-data4/World_Countries_(Generalized)_9029012925078512962.geojson")
+  "data04/World_Countries_(Generalized)_9029012925078512962.geojson")
 
 summary(shape)
 
@@ -37,7 +28,7 @@ st_crs(shape)
 ```
 
 ```{r}
-raw_data<- read.csv(here::here("/Users/weiningl/CASA/05GISS/wk04/prac-data4/HDR23-24_Composite_indices_complete_time_series.csv"),
+raw_data<- read.csv(here::here("data04/HDR23-24_Composite_indices_complete_time_series.csv"),
                     header = TRUE, sep = ",", 
                     encoding = "latin1",
                     na = "n/a")
